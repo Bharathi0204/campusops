@@ -1,0 +1,236 @@
+<div class="form-page">
+
+  <!-- HEADER -->
+
+  <div class="form-header">
+
+    <button
+      type="button"
+      class="back-button"
+      (click)="cancel()"
+    >
+      ← Back to Students
+    </button>
+
+    @if (isEditMode()) {
+      <h1>Edit Student</h1>
+
+      <p>
+        Update the student's information in CampusOps.
+      </p>
+    } @else {
+      <h1>Add Student</h1>
+
+      <p>
+        Create a new student record in CampusOps.
+      </p>
+    }
+
+  </div>
+
+
+  <!-- LOADING EXISTING STUDENT -->
+
+  @if (loadingStudent()) {
+
+    <div class="loading-card">
+      Loading student information...
+    </div>
+
+  } @else {
+
+    <!-- FORM -->
+
+    <form
+      class="student-form"
+      [formGroup]="studentForm"
+      (ngSubmit)="submit()"
+    >
+
+      <!-- SERVER ERROR -->
+
+      @if (errorMessage()) {
+
+        <div class="form-error">
+
+          <span class="error-icon">
+            !
+          </span>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+
+        </div>
+
+      }
+
+
+      <!-- NAME -->
+
+      <div class="form-field">
+
+        <label for="name">
+          Full Name
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="Enter student's full name"
+        />
+
+        @if (name.invalid && name.touched) {
+
+          <div class="field-error">
+
+            @if (name.errors?.['required']) {
+              <span>Name is required.</span>
+            }
+
+            @if (name.errors?.['minlength']) {
+              <span>
+                Name must be at least 2 characters.
+              </span>
+            }
+
+            @if (name.errors?.['maxlength']) {
+              <span>
+                Name cannot exceed 100 characters.
+              </span>
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <div class="form-field">
+
+        <label for="email">
+          Email Address
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="student@example.com"
+        />
+
+        @if (email.invalid && email.touched) {
+
+          <div class="field-error">
+
+            @if (email.errors?.['required']) {
+              <span>Email is required.</span>
+            }
+
+            @if (email.errors?.['email']) {
+              <span>
+                Please provide a valid email address.
+              </span>
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- AGE -->
+
+      <div class="form-field">
+
+        <label for="age">
+          Age
+        </label>
+
+        <input
+          id="age"
+          type="number"
+          formControlName="age"
+          min="18"
+          max="120"
+          placeholder="Enter age"
+        />
+
+        @if (age.invalid && age.touched) {
+
+          <div class="field-error">
+
+            @if (age.errors?.['required']) {
+              <span>Age is required.</span>
+            }
+
+            @if (age.errors?.['min']) {
+              <span>
+                Age must be at least 18.
+              </span>
+            }
+
+            @if (age.errors?.['max']) {
+              <span>
+                Age must not exceed 120.
+              </span>
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="submitting()"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="submitting()"
+        >
+
+          @if (submitting()) {
+
+            @if (isEditMode()) {
+              Updating...
+            } @else {
+              Creating...
+            }
+
+          } @else {
+
+            @if (isEditMode()) {
+              Update Student
+            } @else {
+              Create Student
+            }
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  }
+
+</div>

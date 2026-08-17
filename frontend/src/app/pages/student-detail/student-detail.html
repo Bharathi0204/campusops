@@ -1,0 +1,142 @@
+<div class="student-detail-page">
+
+  <button
+    type="button"
+    class="back-button"
+    (click)="goBack()"
+  >
+    ← Back to Students
+  </button>
+
+
+  @if (loading()) {
+
+    <div class="loading">
+      Loading student...
+    </div>
+
+  }
+
+
+  @if (errorMessage()) {
+
+    <div class="error-card">
+
+      <h2>Unable to load student</h2>
+
+      <p>{{ errorMessage() }}</p>
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()"
+      >
+        Back to Students
+      </button>
+
+    </div>
+
+  }
+
+
+  @if (!loading() && student()) {
+
+    <div class="profile-header">
+
+      <div>
+        <p class="page-label">STUDENT PROFILE</p>
+
+        <h1>
+          {{ student()!.name }}
+        </h1>
+
+        <p class="student-id">
+          Student ID #{{ student()!.id }}
+        </p>
+      </div>
+
+      <div class="status-badge">
+        Active
+      </div>
+
+    </div>
+
+
+    <div class="profile-grid">
+
+      <div class="profile-card">
+
+        <h2>Personal Information</h2>
+
+        <div class="info-row">
+
+          <span class="label">
+            Full Name
+          </span>
+
+          <span class="value">
+            {{ student()!.name }}
+          </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <span class="label">
+            Email Address
+          </span>
+
+          <span class="value">
+            {{ student()!.email }}
+          </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <span class="label">
+            Age
+          </span>
+
+          <span class="value">
+            {{ student()!.age }} years
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-card">
+
+        <h2>Student Overview</h2>
+
+        <div class="overview-box">
+
+          <div class="avatar">
+            {{ student()!.name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+
+            <strong>
+              {{ student()!.name }}
+            </strong>
+
+            <p>
+              {{ student()!.email }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

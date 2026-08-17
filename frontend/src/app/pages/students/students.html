@@ -1,0 +1,424 @@
+<div class="students-page">
+
+  <!-- SUCCESS NOTIFICATION -->
+
+  @if (successMessage()) {
+
+    <div
+      class="success-message"
+      [class.notification-create]="
+        successType() === 'create'
+      "
+      [class.notification-update]="
+        successType() === 'update'
+      "
+      [class.notification-delete]="
+        successType() === 'delete'
+      "
+    >
+
+      <span class="success-icon">
+        ✓
+      </span>
+
+      <span>
+        {{ successMessage() }}
+      </span>
+
+    </div>
+
+  }
+
+
+  <!-- PAGE HEADER -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Students
+      </h1>
+
+      <p>
+        Manage and view all students in CampusOps.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="add-button"
+      [routerLink]="['/students/new']"
+    >
+      + Add Student
+    </button>
+
+  </div>
+
+
+  <!-- SEARCH TOOLBAR -->
+
+  <div class="toolbar">
+
+    <div class="search-box">
+
+      <span>
+        🔍
+      </span>
+
+      <input
+        type="text"
+        placeholder="Search by name or email..."
+        [value]="searchTerm()"
+        (input)="searchStudents($event)"
+      />
+
+      @if (searchTerm()) {
+
+        <button
+          class="clear-button"
+          type="button"
+          (click)="clearSearch()"
+        >
+          ✕
+        </button>
+
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  @if (
+    loading() &&
+    students().length === 0
+  ) {
+
+    <div class="loading">
+      Loading students...
+    </div>
+
+  }
+
+
+  <!-- ERROR -->
+
+  @if (errorMessage()) {
+
+    <div class="error">
+      {{ errorMessage() }}
+    </div>
+
+  }
+
+
+  <!-- STUDENT CONTENT -->
+
+  @if (!errorMessage()) {
+
+    <!-- RESULTS INFO -->
+
+    <div class="results-info">
+
+      <span>
+        Showing
+        {{ students().length }}
+        of
+        {{ totalStudents() }}
+        students
+      </span>
+
+
+      @if (searchTerm()) {
+
+        <span>
+
+          Search results for
+
+          "<strong>
+            {{ searchTerm() }}
+          </strong>"
+
+        </span>
+
+      }
+
+    </div>
+
+
+    <!-- STUDENT LIST -->
+
+    <div class="student-list">
+
+      @for (
+        student of students();
+        track student.id
+      ) {
+
+        <div class="student-card">
+
+          <!-- STUDENT ID -->
+
+          <div class="student-id">
+
+            #{{ student.id }}
+
+          </div>
+
+
+          <!-- STUDENT INFORMATION -->
+
+          <div class="student-info">
+
+            <strong>
+              {{ student.name }}
+            </strong>
+
+            <span>
+              {{ student.email }}
+            </span>
+
+          </div>
+
+
+          <!-- STUDENT ACTIONS -->
+
+          <div class="student-actions">
+
+            <span class="student-age">
+              {{ student.age }} years
+            </span>
+
+
+            <!-- VIEW -->
+
+            <button
+              type="button"
+              class="view-button"
+              [routerLink]="[
+                '/students',
+                student.id
+              ]"
+            >
+              View
+            </button>
+
+
+            <!-- EDIT -->
+
+            <button
+              type="button"
+              class="edit-button"
+              [routerLink]="[
+                '/students/edit',
+                student.id
+              ]"
+            >
+              Edit
+            </button>
+
+
+            <!-- DELETE -->
+
+            <button
+              type="button"
+              class="delete-button"
+              (click)="openDeleteModal(student)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- EMPTY STATE -->
+
+      @empty {
+
+        <div class="empty-state">
+
+          <h3>
+            No students found
+          </h3>
+
+          <p>
+            Try searching with a different name
+            or email.
+          </p>
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- PAGINATION -->
+
+    @if (totalPages() > 1) {
+
+      <div class="pagination">
+
+        <!-- PREVIOUS -->
+
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="
+            currentPage() === 1
+          "
+          (click)="previousPage()"
+        >
+          ← Previous
+        </button>
+
+
+        <!-- PAGE NUMBERS -->
+
+        <div class="page-numbers">
+
+          @for (
+            page of pages;
+            track page
+          ) {
+
+            <button
+              type="button"
+              class="page-button"
+              [class.active]="
+                page === currentPage()
+              "
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+          }
+
+        </div>
+
+
+        <!-- NEXT -->
+
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="
+            currentPage() === totalPages()
+          "
+          (click)="nextPage()"
+        >
+          Next →
+        </button>
+
+      </div>
+
+    }
+
+  }
+
+</div>
+
+
+<!-- DELETE MODAL -->
+
+@if (showDeleteModal()) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeDeleteModal()"
+  >
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- MODAL ICON -->
+
+      <div class="modal-icon">
+        !
+      </div>
+
+
+      <!-- TITLE -->
+
+      <h2>
+        Delete Student?
+      </h2>
+
+
+      <!-- STUDENT NAME -->
+
+      @if (selectedStudent()) {
+
+        <p>
+
+          Are you sure you want to delete
+
+          <strong>
+            {{ selectedStudent()!.name }}
+          </strong>?
+
+        </p>
+
+        <p class="warning-text">
+          This action cannot be undone.
+        </p>
+
+      }
+
+
+      <!-- MODAL ACTIONS -->
+
+      <div class="modal-actions">
+
+        <!-- CANCEL -->
+
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="deleting()"
+          (click)="closeDeleteModal()"
+        >
+          Cancel
+        </button>
+
+
+        <!-- CONFIRM DELETE -->
+
+        <button
+          type="button"
+          class="confirm-delete-button"
+          [disabled]="deleting()"
+          (click)="confirmDelete()"
+        >
+
+          @if (deleting()) {
+
+            Deleting...
+
+          } @else {
+
+            Delete Student
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
