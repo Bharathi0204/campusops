@@ -1,0 +1,137 @@
+<div class="courses-page">
+
+  <div class="page-header">
+
+    <div>
+
+      <p class="eyebrow">
+        CAMPUSOPS
+      </p>
+
+      <h1>
+        Courses
+      </h1>
+
+      <p class="subtitle">
+        Manage academic courses
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Loading -->
+
+  @if (loading()) {
+
+    <div class="status-message">
+      Loading courses...
+    </div>
+
+  }
+
+
+  <!-- Error -->
+
+  @if (!loading() && error()) {
+
+    <div class="error">
+      {{ error() }}
+    </div>
+
+  }
+
+
+  <!-- Course data -->
+
+  @if (!loading() && !error()) {
+
+    <div class="course-summary">
+
+      Total Courses:
+      {{ totalCourses() }}
+
+    </div>
+
+
+    <div class="course-table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Code
+            </th>
+
+            <th>
+              Course Name
+            </th>
+
+            <th>
+              Credits
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            course of courses();
+            track course.id
+          ) {
+
+            <tr>
+
+              <td>
+                {{ course.id }}
+              </td>
+
+              <td>
+                {{ course.code }}
+              </td>
+
+              <td>
+                {{ course.name }}
+              </td>
+
+              <td>
+                {{ course.credits }}
+              </td>
+
+            </tr>
+
+          }
+
+
+          @if (courses().length === 0) {
+
+            <tr>
+
+              <td colspan="4">
+                No courses found.
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</div>

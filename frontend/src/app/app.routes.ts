@@ -47,6 +47,13 @@ export const routes: Routes = [
         (m) => m.StudentDetail
       ),
   },
+  {
+  path: 'courses',
+  loadComponent: () =>
+    import('./pages/courses/courses').then(
+      (m) => m.Courses
+    ),
+},
 
   {
     path: '**',
