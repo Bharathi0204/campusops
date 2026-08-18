@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+
   {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
   },
+
   {
     path: 'dashboard',
     loadComponent: () =>
@@ -13,6 +15,7 @@ export const routes: Routes = [
         (m) => m.Dashboard
       ),
   },
+
   {
     path: 'students',
     loadComponent: () =>
@@ -20,20 +23,23 @@ export const routes: Routes = [
         (m) => m.Students
       ),
   },
+
   {
-  path: 'students/new',
-  loadComponent: () =>
-    import('./pages/student-form/student-form').then(
-      (m) => m.StudentForm
-    ),
-},
-{
-  path: 'students/edit/:id',
-  loadComponent: () =>
-    import('./pages/student-form/student-form').then(
-      (m) => m.StudentForm
-    ),
-},
+    path: 'students/new',
+    loadComponent: () =>
+      import('./pages/student-form/student-form').then(
+        (m) => m.StudentForm
+      ),
+  },
+
+  {
+    path: 'students/edit/:id',
+    loadComponent: () =>
+      import('./pages/student-form/student-form').then(
+        (m) => m.StudentForm
+      ),
+  },
+
   {
     path: 'students/:id',
     loadComponent: () =>
@@ -41,8 +47,10 @@ export const routes: Routes = [
         (m) => m.StudentDetail
       ),
   },
+
   {
     path: '**',
     redirectTo: 'dashboard',
   },
+
 ];

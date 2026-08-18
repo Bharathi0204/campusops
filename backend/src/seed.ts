@@ -20,7 +20,36 @@ const firstNames = [
   "Prakash",
   "Nithya",
   "Vijay",
-  "Pooja"
+  "Pooja",
+  "mohan",
+  "suresh",
+  "Ramesh",
+  "Anjali",
+  "Karthik",
+  "Lakshmi",
+  "Siddharth",
+  "Priya",
+  "Manoj",
+  "Ritika",
+  "Arjun",
+  "Isha",
+  "Kiran",
+  "Snehal",
+  "Raghav",
+  "Anika",
+  "Vishal",
+  "Shreya",
+  "Aditya",
+  "Nisha",
+  "Rohini",
+  "Kunal",
+  "Tanvi",
+  "Saurabh",
+
+  "Aishwarya",
+  "Raghav",
+  "Megha",
+  
 ];
 
 const lastNames = [
@@ -28,7 +57,23 @@ const lastNames = [
   "Sharma",
   "Patel",
   "Reddy",
-  "Krishnan"
+  "Krishnan",
+  "Gupta",
+  "Iyer",
+  "Chowdhury",
+  "Nair",
+  "Singh",
+  "Das",
+  "Bose",
+  "Rao",
+  "Chakraborty",
+  "Menon",
+  "Kapoor",
+  "Jain",
+  "Chatterjee",
+  "Desai",
+  "Mehta",
+
 ];
 
 async function seedStudents() {
@@ -37,7 +82,7 @@ async function seedStudents() {
   try {
     await client.query("BEGIN");
 
-    for (let i = 1; i <= 97; i++) {
+    for (let i = 1; i <= 300; i++) {
       const firstName = firstNames[(i - 1) % firstNames.length];
       const lastName = lastNames[(i - 1) % lastNames.length];
 

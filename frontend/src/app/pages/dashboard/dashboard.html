@@ -1,1 +1,249 @@
-<p>dashboard works!</p>
+<div class="dashboard-page">
+
+  <!-- Dashboard Header -->
+  <header class="dashboard-header">
+
+    <div>
+      <p class="eyebrow">CAMPUSOPS</p>
+      <h1>Dashboard</h1>
+      <p class="subtitle">
+        Overview of your college management system
+      </p>
+    </div>
+
+    <div class="header-badge">
+      <span class="status-dot"></span>
+      System Online
+    </div>
+
+  </header>
+
+
+  <!-- Error State -->
+  @if (error()) {
+
+    <section class="error-state">
+
+      <div class="error-icon">!</div>
+
+      <div>
+        <h2>Unable to load dashboard</h2>
+        <p>{{ error() }}</p>
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- Dashboard Content -->
+  @if (!error()) {
+
+    <!-- KPI Section -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+
+        <div class="stat-card-top">
+
+          <div class="stat-icon">
+            👥
+          </div>
+
+          <span class="stat-label">
+            STUDENTS
+          </span>
+
+        </div>
+
+        @if (loading()) {
+
+          <div class="stat-loading"></div>
+
+        } @else {
+
+          <div class="stat-value">
+            {{ totalStudents() }}
+          </div>
+
+        }
+
+        <p class="stat-description">
+          Students currently registered
+        </p>
+
+      </article>
+
+    </section>
+
+
+    <!-- Student Management -->
+    <section class="section">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">STUDENT MANAGEMENT</p>
+          <h2>Manage Students</h2>
+        </div>
+
+        <button
+          class="secondary-button"
+          type="button"
+          (click)="goToStudents()"
+        >
+          View all students
+        </button>
+
+      </div>
+
+
+      <div class="management-card">
+
+        <div class="management-content">
+
+          <div class="management-icon">
+            👨‍🎓
+          </div>
+
+          <div>
+            <h3>Student Records</h3>
+
+            <p>
+              Create, view, update and manage student
+              records from the student management module.
+            </p>
+          </div>
+
+        </div>
+
+        <button
+          class="primary-button"
+          type="button"
+          (click)="addStudent()"
+        >
+          + Add Student
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- Campus Modules -->
+    <section class="section">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">CAMPUSOPS</p>
+          <h2>Management Modules</h2>
+        </div>
+
+      </div>
+
+
+      <div class="modules-grid">
+
+        <!-- Students -->
+        <article class="module-card active">
+
+          <div class="module-icon">
+            👥
+          </div>
+
+          <div class="module-info">
+
+            <h3>Students</h3>
+
+            <p>
+              Student registration and records
+            </p>
+
+          </div>
+
+          <span class="module-status available">
+            Available
+          </span>
+
+        </article>
+
+
+        <!-- Courses -->
+        <article class="module-card">
+
+          <div class="module-icon">
+            📚
+          </div>
+
+          <div class="module-info">
+
+            <h3>Courses</h3>
+
+            <p>
+              Course and academic management
+            </p>
+
+          </div>
+
+          <span class="module-status">
+            Coming next
+          </span>
+
+        </article>
+
+
+        <!-- Attendance -->
+        <article class="module-card">
+
+          <div class="module-icon">
+            📅
+          </div>
+
+          <div class="module-info">
+
+            <h3>Attendance</h3>
+
+            <p>
+              Attendance tracking and analysis
+            </p>
+
+          </div>
+
+          <span class="module-status">
+            Coming next
+          </span>
+
+        </article>
+
+
+        <!-- Exams -->
+        <article class="module-card">
+
+          <div class="module-icon">
+            📝
+          </div>
+
+          <div class="module-info">
+
+            <h3>Exams</h3>
+
+            <p>
+              Examination and result management
+            </p>
+
+          </div>
+
+          <span class="module-status">
+            Coming next
+          </span>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  }
+
+</div>
