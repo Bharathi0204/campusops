@@ -1,5 +1,16 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { finalize } from 'rxjs';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
+
+import { Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged
+} from 'rxjs/operators';
+
 import { Course, CourseService } from '../../services/course';
 
 @Component({
@@ -12,55 +23,133 @@ export class Courses implements OnInit {
 
   private readonly courseService = inject(CourseService);
 
-  // =========================
-  // Reactive UI state
-  // =========================
+  // ============================================
+  // Course data
+  // ============================================
 
   courses = signal<Course[]>([]);
 
+
+  // ============================================
+  // Pagination state
+  // ============================================
+
   page = signal(1);
+
   limit = signal(10);
-  search = signal('');
 
   totalCourses = signal(0);
+
   totalPages = signal(0);
 
+
+  // ============================================
+  // Search state
+  // ============================================
+
+  search = signal('');
+
+  private readonly searchSubject =
+    new Subject<string>();
+
+
+  // ============================================
+  // UI state
+  // ============================================
+
   loading = signal(false);
+
   error = signal('');
 
 
-  // =========================
+  // ============================================
   // Component initialization
-  // =========================
+  // ============================================
 
   ngOnInit(): void {
+
+    this.setupSearch();
+
     this.loadCourses();
   }
 
 
-  // =========================
-  // Load courses
-  // =========================
+  // ============================================
+  // Setup debounced search
+  // ============================================
+
+  private setupSearch(): void {
+
+    this.searchSubject
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe((searchValue) => {
+
+        this.search.set(searchValue);
+
+        // New search always starts from page 1
+        this.page.set(1);
+
+        this.loadCourses();
+
+      });
+  }
+
+
+  // ============================================
+  // Search input
+  // ============================================
+
+  onSearch(value: string): void {
+
+    this.searchSubject.next(value.trim());
+
+  }
+
+
+  // ============================================
+  // Clear search
+  // ============================================
+
+  clearSearch(): void {
+
+    this.search.set('');
+
+    this.page.set(1);
+
+    this.loadCourses();
+
+  }
+
+
+  // ============================================
+  // Load courses from backend
+  // ============================================
 
   loadCourses(): void {
 
     this.loading.set(true);
+
     this.error.set('');
 
-    console.log('Loading courses...');
+
+    console.log(
+      'Loading courses:',
+      {
+        page: this.page(),
+        limit: this.limit(),
+        search: this.search()
+      }
+    );
+
 
     this.courseService
       .getCourses(
         this.page(),
         this.limit(),
         this.search()
-      )
-      .pipe(
-        finalize(() => {
-          this.loading.set(false);
-
-          console.log('Course request finished.');
-        })
       )
       .subscribe({
 
@@ -71,13 +160,22 @@ export class Courses implements OnInit {
             response
           );
 
-          this.courses.set(response.courses);
 
-          this.page.set(response.page);
+          this.courses.set(
+            response.courses
+          );
 
-          this.limit.set(response.limit);
+          this.page.set(
+            response.page
+          );
 
-          this.search.set(response.search);
+          this.limit.set(
+            response.limit
+          );
+
+          this.search.set(
+            response.search
+          );
 
           this.totalCourses.set(
             response.totalCourses
@@ -86,7 +184,9 @@ export class Courses implements OnInit {
           this.totalPages.set(
             response.totalPages
           );
+
         },
+
 
         error: (error) => {
 
@@ -98,8 +198,60 @@ export class Courses implements OnInit {
           this.error.set(
             'Unable to load courses.'
           );
+
+        },
+
+
+        complete: () => {
+
+          this.loading.set(false);
+
+          console.log(
+            'Course request finished.'
+          );
+
         }
 
       });
+
   }
+
+
+  // ============================================
+  // Go to previous page
+  // ============================================
+
+  previousPage(): void {
+
+    if (this.page() <= 1) {
+      return;
+    }
+
+    this.page.update(
+      currentPage => currentPage - 1
+    );
+
+    this.loadCourses();
+
+  }
+
+
+  // ============================================
+  // Go to next page
+  // ============================================
+
+  nextPage(): void {
+
+    if (this.page() >= this.totalPages()) {
+      return;
+    }
+
+    this.page.update(
+      currentPage => currentPage + 1
+    );
+
+    this.loadCourses();
+
+  }
+
 }

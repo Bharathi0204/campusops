@@ -1,5 +1,9 @@
 <div class="courses-page">
 
+  <!-- ========================================= -->
+  <!-- Header -->
+  <!-- ========================================= -->
+
   <div class="page-header">
 
     <div>
@@ -21,7 +25,41 @@
   </div>
 
 
+  <!-- ========================================= -->
+  <!-- Search -->
+  <!-- ========================================= -->
+
+  <div class="course-toolbar">
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        placeholder="Search by course code or name..."
+        [value]="search()"
+        (input)="onSearch($any($event.target).value)"
+      />
+
+      @if (search()) {
+
+        <button
+          type="button"
+          class="clear-button"
+          (click)="clearSearch()"
+        >
+          Clear
+        </button>
+
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================= -->
   <!-- Loading -->
+  <!-- ========================================= -->
 
   @if (loading()) {
 
@@ -32,7 +70,9 @@
   }
 
 
+  <!-- ========================================= -->
   <!-- Error -->
+  <!-- ========================================= -->
 
   @if (!loading() && error()) {
 
@@ -43,17 +83,32 @@
   }
 
 
-  <!-- Course data -->
+  <!-- ========================================= -->
+  <!-- Course content -->
+  <!-- ========================================= -->
 
   @if (!loading() && !error()) {
 
     <div class="course-summary">
 
-      Total Courses:
-      {{ totalCourses() }}
+      <span>
+        Total Courses: {{ totalCourses() }}
+      </span>
+
+      @if (search()) {
+
+        <span>
+          Search: "{{ search() }}"
+        </span>
+
+      }
 
     </div>
 
+
+    <!-- ======================================= -->
+    <!-- Course table -->
+    <!-- ======================================= -->
 
     <div class="course-table-wrapper">
 
@@ -131,6 +186,46 @@
       </table>
 
     </div>
+
+
+    <!-- ======================================= -->
+    <!-- Pagination -->
+    <!-- ======================================= -->
+
+    @if (totalPages() > 0) {
+
+      <div class="pagination">
+
+        <button
+          type="button"
+          (click)="previousPage()"
+          [disabled]="page() === 1 || loading()"
+        >
+          Previous
+        </button>
+
+
+        <span class="page-info">
+
+          Page
+          <strong>{{ page() }}</strong>
+          of
+          <strong>{{ totalPages() }}</strong>
+
+        </span>
+
+
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="page() === totalPages() || loading()"
+        >
+          Next
+        </button>
+
+      </div>
+
+    }
 
   }
 
