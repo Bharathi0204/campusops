@@ -82,7 +82,7 @@ async function seedStudents() {
   try {
     await client.query("BEGIN");
 
-    for (let i = 1; i <= 300; i++) {
+    for (let i = 1; i <= 400; i++) {
       const firstName = firstNames[(i - 1) % firstNames.length];
       const lastName = lastNames[(i - 1) % lastNames.length];
 
